@@ -12,7 +12,7 @@ import { Logout } from "../redux/userSlice";
 
 function MenuList({ user, onClick }) {
   const dispatch = useDispatch();
- 
+
   const handleLogout = () => {
      dispatch(Logout());
      window.location.replace("/");
@@ -128,7 +128,13 @@ const Navbar = () => {
               <Link to='/companies'>Companies</Link>
             </li>
             <li>
-              <Link to='/upload-job'>Upload Job</Link>
+              <Link to={user?.acountType === "seeker" 
+              ? "/applications"
+              :"/upload-job"
+              }
+              >
+                {user?.accountType === "seeker" ? "Applications" : "Upload Job" }
+                </Link>
             </li>
             <li>
               <Link to='/about-us'>About</Link>

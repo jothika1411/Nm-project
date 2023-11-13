@@ -50,14 +50,12 @@ const SignUp = ({ open, setOpen }) => {
         data: data,
         method: "POST",
        });
-
-       
-       
-      if(res?.status === "failed") {
+       if(res?.status === "failed") {
         setErrMsg(res?.message);
       } else {
         setErrMsg("");
         const data = { token: res?.token, ...res?.user};
+        
         dispatch(Login(data));
         localStorage.setItem("userInfo",JSON.stringify(data));
         window.location.replace(from);

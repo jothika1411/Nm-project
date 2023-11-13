@@ -35,7 +35,7 @@ export const handleFileUpload = async(uploadFile)=>
     formData.append("upload_present","jonfinder");
 
 try {
-    const response = await axios.post("https://api.cloudinary.com/v1_1?cloudNmae/image/upload/",
+    const response = await axios.post("https://api.cloudinary.com/v1_1?dg3lc8oy5/image/upload/",
     formData
     );
     return response.data.secure_url;

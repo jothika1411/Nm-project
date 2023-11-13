@@ -26,7 +26,7 @@ const CompanyForm = ({ open, setOpen }) => {
   const [profileImage, setProfileImage] = useState("");
   const [uploadCv, setUploadCv] = useState("");
   const [isLoading,setIsLoading] = useState(false);
-  const [errMsg, setErrMsg] = useState(false);
+  const [errMsg, setErrMsg] = useState({staus :false});
 
   const onSubmit = async(data) => {
     setIsLoading(true);
@@ -35,6 +35,32 @@ const CompanyForm = ({ open, setOpen }) => {
     const uri = profileImage && (await handleFileUpload(profileImage));
 
     const newData = uri ? {...data, profileUrl:uri }: data;
+
+    try {
+      const res = await apiRequest({
+        url: "/companies/update-company",
+        token: user?.token,
+        data: newData,
+        method: "PUT",
+      });
+      setIsLoading(false);
+
+      if(res.status === "failed") {
+        setErrMsg({ ...res});
+      } else {
+        setErrMsg({ status: "success", message: res.message});
+        const newData = { token: res?.token, ...res?.user};
+        dispatch(Login(newData));
+        localStorage.setItem("userInfo", JSON.stringify(data));
+
+        setTimeout(() => {
+          window.location.reload();
+        },1500);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
   };
 
   const closeModal = () => setOpen(false);
@@ -214,7 +240,7 @@ const CompanyProfile = () => {
           </h2>
 
           {user?.user?.accountType === undefined &&
-            info?._id === user?.user?._id && (
+            info?._id === user?._id && (
               <div className='flex items-center justifu-center py-5 md:py-0 gap-4'>
                 <CustomButton
                   onClick={() => setOpenForm(true)}
